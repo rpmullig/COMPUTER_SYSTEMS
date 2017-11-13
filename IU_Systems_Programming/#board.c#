@@ -1,0 +1,20 @@
+
+
+struct squares {
+
+  char row;
+  char col;
+  int y1;
+  int y2;
+  int x1; 
+  int x2;
+
+} square; 
+
+
+
+//with the x1,y1,x2,y2 we can use setaddrWindow
+
+
+
+

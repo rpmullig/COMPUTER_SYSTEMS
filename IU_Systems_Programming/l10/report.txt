@@ -1,0 +1,42 @@
+Robert Mulligan
+
+What did I learn:
+     I learned more about files and how to read images 
+
+Difficulties:
+	numerous SD cards, and many other problems to 
+
+
+
+
+
+* Q1.) What are we doing here and how does it relate to what we know about SPI?
+
+With clocks in SPI, the asynchronous communication requires the high state  to send data and low  state to recieve data. 
+
+
+* Q2.) Explain how you might use the *f3d_delay_uS()* function
+  within the *delay()* function to replace the delay loop
+  below. What would you expect to be the advantage of using a
+  timer over a delay loop?
+
+You will get control with how long to set it and have a an easier time adjusting it
+
+
+* Q3.) Read chapter 12 in the lab manual which covers DMA (direct memory access). Why might DMA be important in improving the performance of your image display application?
+
+Multiple DMA channels can be enabled simultaneously and works by sending buffers. When we send images, we use lots of buffers due to hardware limitations for reading and writing. Since it's direct, it creates a quick connection between cpu and memory. Since this just requires reading memory, then we are all set for a quick image display
+
+
+* Q4.) Research the FAT file system and describe the function of the file allocation table. Explain how the corruption of an entry in the table can cause part of a file to be lost.
+
+" Each entry contains either the number of the next cluster in the file, or else a marker indicating end of file, unused disk space, or special reserved areas of the disk. The root directory of the disk contains the number of the first cluster of each file in that directory; the operating system can then traverse the FAT table, looking up the cluster number of each successive part of the disk file as a cluster chain until the end of the file is reached. In much the same way, sub-directories are implemented as special files containing the directory entries of their respective files."
+
+This means that it's a long chain, any corruption disturbs that chain and will corrupt the rest of the data. 
+
+
+* Q5.) What is the difference between FAT16 and FAT32?
+
+
+These represent a cluster chan of different sizes in FAT16 and FAT32 corresponding to 16 and 32 cluster chain size respectively. Their number of bits in the table varies and 
+

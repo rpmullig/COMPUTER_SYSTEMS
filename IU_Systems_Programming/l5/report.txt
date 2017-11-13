@@ -1,0 +1,30 @@
+Robert Mulligan
+
+Questions: 
+
+   How many connections are required to communicate over UART?
+         2  
+
+    What is the purpose of "alternate functions" for GPIO pins?
+    	 So other GPIO devices components can set up. 
+
+
+    Define "baud rate" in your own words.
+    	   Speed at which the computer can communicate with clocks is synchronized for communication purposes of sending and recieving electrical signals
+
+    Why do we need newlib_stubs? Specifically, is there a reason that printf won't work on the board without it?
+    	The board has a specific protocal that is required to communicate with it and a special library is required
+
+
+    Give an example of a situation in which the Salae Logic Analyzer is the best debugging method and include a screen shot of the Logic application.
+    	 When you don't have a visible out put to test and you'll need to see if the connection is working and reading the inputs
+    
+
+
+
+What did you learn, any difficulties you had:
+
+-We didn't grab one of the 10 Logic analyzers to begin with, so we had to wait a long time before we could move on with the lab. 
+-SerialT had pre-required settings that weren't listed in the instructions 
+-Instructions were unclear
+-Plugging in the wires confusing with different board types

@@ -1,0 +1,12 @@
+Matthew Carey
+Robert Mulligan
+
+LAB11
+
+Difficulties:
+
+My main difficulty was issues with my queue data structure. I trusted my first try too much and it made it very hard to debug when things went wrong with get and put char. After isolating the queue data structure and giving test cases I found many silly errors. After I worked things out everything worked out fine.
+
+What did I learn:
+
+I learned how the interrupt and polling system works with processors and the differences between them. I also learned the circular queue data structures. I alos learned how to properly branch in github. 

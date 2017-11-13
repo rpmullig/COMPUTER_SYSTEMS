@@ -1,0 +1,30 @@
+Robert Mulligan
+
+
+Q1) In previous labs, adding a peripheral has required pin initializations. Why were able to add the nunchuk without initializing anything? 
+
+We've already initialized the pins on the I2C with the accellerometer
+
+Q2) What are the major differences between these two functions and what does that imply about communicating with the nunchuk?
+
+The register is required for read and not for nunchuk_read. 
+
+
+
+Q3) What do all of these variables correspond to in the nunchuk?  
+
+jx & jy is joystick data
+ax,ay,ax is the accelometer data
+c & z are the buttons
+
+
+Q4)
+
+Taking the array data[5] from the nunchuk and masking it into 0x03. It sets the buttons buttons to on or off depending on if they're pressed or not. 
+
+
+Difficulties: 
+Getting the data from accellerometer into a standard form.. we didn't know it was 0-1023 
+
+
+

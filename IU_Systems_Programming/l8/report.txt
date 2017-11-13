@@ -1,0 +1,63 @@
+Robert Mulligan
+
+
+
+Q1) The accelerometer/magnetometer comes pre-wired on the STM board. Open up the the Data Sheet and find the page with the Pin Descriptions. How many pins does it have? List the pins and their names. Next find the electrical specifications under the Electrical Characteristics section. How many volts (Vdd) are required to power the accelerometer/magnetometer? The accelerometer/magnetometer is sitting somewhere on the STM board. Try to find it and describe where it is.
+
+It has 14 pins
+
+
+Pin# Name Function
+1 Vdd_IO Power supply for I/O pins
+2 SCL Signal interface I 2 C serial clock (SCL)
+3 SDA Signal interface I 2 C serial data (SDA)
+4 INT2 Inertial Interrupt 2
+5 INT1 Inertial Interrupt 1
+6 C1 Reserved capacitor connection (C1)
+7 GND 0 V supply
+8 Reserved Leave unconnected
+9 DRDY Data ready
+10 Reserved Connect to GND
+11 Reserved Connect to GND
+12 SETP S/R capacitor connection (C2)
+13 SETC S/R capacitor connection (C2)
+14 Vdd Power supply
+
+2.5 Volts required
+the Accelerometer is sitting to the left of the audio amplifier below the middle USB and above the pins. 
+
+
+Q2) Why do we write to the accelerometer/magnetometer before we can read from them? What are the following lines of code doing? HINT: LOOK AT THE COMMENTS
+
+We first need to  enable the axis and adress the input data. We then filter the data. We also need to convert the data into somethign readable and accurate. If we didn't have a conversion in place we couldn't understand the data. We also need the input sensors to be on, or we can't read the data. 
+
+
+Q3) What do the following lines of code do? (it is only necessary to explain the accelerometer)
+
+/*f3d_accel.c*/
+for (i=0; i<3; i++) {
+  raw_data[i]=((int16_t)((uint16_t)buffer[2*i+1] << 8) + buffer[2*i])/(uint8_t)16;
+  accel_data[i]=(float)raw_data[i]/1000.0;
+}
+
+
+The lines of code go through and edit the data within the float array of raw_data, then manipulate that data in the accel_data float array.
+
+The raw_data array cast as an int and shifts the bits out of a buffer index location and divides by 16 to get into the right data type size. 
+
+
+Q4.) Why might it be necessary to tilt compensate your compass computation?
+
+Q4)
+Because the accelerometer measurements cannot distinguish earth’s gravity from linear
+acceleration or angular acceleration, fast motion causes pitch/roll calculation error which
+then directly introduces an error to the heading calculation. In most cases, the fast motion
+doesn't last long and the device goes back to a stationary position. So the heading accuracy
+in an electronic compass means static accuracy when the device is still or without
+acceleration.
+
+
+Difficulties: 
+
+I had difficulties making the box not flicker and setting the corred addrWindow
+

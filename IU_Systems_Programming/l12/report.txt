@@ -1,0 +1,23 @@
+Robert Mulligan
+
+Difficulties:
+	wiring caused random hardware erros that we couldn't tell was a code or hardwrade error
+
+What did I learn:
+     how to read a wav file through opening the file and the C syntax for opening sound files
+     More about enumeration
+
+Questions 1)
+ 	  The peripheral base address the same as the DMA. Since it's a Direct Memory Address, it's a lot more sensitive and it points to DR. The DMA is also affected by the processor that is important for this.
+
+Question 2)
+ It's necessary to enable incremeting because it follows the way that FATS looks through blocks of info then doing this can prevent missing anything.
+
+Question 3) 
+	 Just in case the flag is set.
+
+Question 4) 
+	 The DMA transfer has overhead of anything over 4 bytes and it would not get any benefit out of it.
+
+Question 5)
+	  Since there's different peripheral addresses involved and DMA has it's own address.

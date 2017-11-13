@@ -1,0 +1,32 @@
+Each question is worth 3 points
+
+-Discuss the advantages and disadvantages of printf debugging? Note: there is no right answer to this, we are just looking for your thoughts on the issue
+    
+Advantage: easy to use and you can see it
+disadvantage: very very slow
+
+
+-Explain why the spiReadWrite function is called inside a higher level peripheral function (the lcdWrite function).
+because we need to read and write bits first
+
+
+-Why does LCD_CS_DEASSERT() do? Why is it important?
+to select the lcd as the chip
+
+
+-Explain how the character data from the ASCII array in glcdfont.c gets converted to pixels.
+you can conver the ASCII to binary by reading the bits using bit shift
+
+
+-Give the exact timing difference between the two versions of f3d_lcd_fillScreen, from the Salae analyzer, and explain why the new function is faster.
+Version 1 takes 80 milliseconds and version 2 takes 200 milliseconds. The first firstion is much faster. The new function is faster
+because software can work quicker than hardware. So instead of sending each individual pixel, the fast one will
+send to a buffer then send an entire row of data. 
+
+
+Difficulties:
+
+I had difficulties getting the screen to not flicker
+wiring the board was difficult
+the size of the screen was difficult to find, it was within code on the lab manual
+Searching through pages and pages of the lab manual and documentation 

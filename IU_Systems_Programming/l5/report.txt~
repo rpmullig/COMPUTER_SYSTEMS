@@ -1,0 +1,18 @@
+Robert Mulligan
+
+
+
+    How many connections are required to communicate over UART?
+    
+
+    What is the purpose of "alternate functions" for GPIO pins?
+
+    Define "baud rate" in your own words.
+
+    Why do we need newlib_stubs? Specifically, is there a reason that printf won't work on the board without it?
+
+    Give an example of a situation in which the Salae Logic Analyzer is the best debugging method and include a screen shot of the Logic application.
+
+What did you learn, any difficulties you had:
+
+-We didn't grab one of the 10 Logic analyzers to begin with, so we had to wait a long time before we could move on with the lab. 

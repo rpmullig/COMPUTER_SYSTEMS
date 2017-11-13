@@ -1,0 +1,296 @@
+/* main.c ---
+*
+* Filename: main.c
+* Description: main program to build a compass
+* Author: Robert Mulligan
+* Maintainer: Robert Mulligan
+* Created: Thu Feb 10 2016
+/* Code: */
+
+#include <stm32f30x.h> // Pull in include files for F30x standard drivers
+#include <f3d_uart.h>
+#include <f3d_user_btn.h>
+#include <f3d_lcd_sd.h>
+#include <f3d_i2c.h>
+#include <f3d_accel.h>
+#include <f3d_mag.h>
+#include <stdio.h>
+#include <math.h>
+#include <f3d_led.h>
+#include <f3d_nunchuk.h>
+#include <f3d_gyro.h>
+
+
+
+#define TIMER 20000
+
+void gyro_display(void);
+void tilt(void);
+void compass(void);
+
+
+uint16_t colors[25];
+uint16_t colors2[25];
+uint16_t colors3[25];
+
+// floats arrays
+float mag_data[3];
+float accel_data[3];
+
+
+float roll;
+float pitch;
+float heading;
+float degrees;   
+int led;
+int inc, size;
+int row, col;
+
+
+//gryo float data
+float data[3];
+
+//for the strings that print out
+char data_string_x[30]; 
+char data_string_y[30]; 
+char data_string_z[30]; 
+
+uint16_t x_0,y_0,x_1,y_1;
+
+
+
+int main(void) {
+
+
+  // Set up your inits before you go ahead
+  f3d_uart_init();
+  delay(10);
+  f3d_lcd_init();
+  delay(10);
+  f3d_i2c1_init();
+  delay(10); 
+  f3d_accel_init();
+  delay(10);
+  f3d_mag_init();
+  delay(10); 
+  f3d_led_init();
+  delay(10); 
+  f3d_nunchuk_init();
+  delay(10);
+  f3d_gyro_init();
+  delay(10);
+
+
+  // Setup buffers
+  setvbuf(stdin, NULL, _IONBF, 0);
+  setvbuf(stdout, NULL, _IONBF, 0);
+  setvbuf(stderr, NULL, _IONBF, 0);
+
+
+  int steven = 0;
+  for(steven=0; steven < 25; steven++) {
+    colors[steven] = WHITE;
+    colors2[steven] = BLACK;
+    colors3[steven] = RED;
+  }
+
+  f3d_lcd_fillScreen(BLACK); 
+
+  nunchuk_t nunchuk; 
+  int mode = 0;
+  int next = 0;
+  int prev = 0;
+  int counter = 0;
+  while(1) {
+  counter = counter + 1;
+  f3d_nunchuk_read(&nunchuk);
+
+  if((nunchuk.jx > 154 || nunchuk.c == 1)&& counter > 7) { next = 1; counter = 0; }
+  if((nunchuk.jx < 100 || nunchuk.z == 1)&& counter > 7) { prev = 1; counter = 0; }
+
+  if(next){
+    mode = (mode + 1)%2;
+    if(mode == 0){
+      f3d_lcd_fillScreen(BLACK);
+    } else if (mode == 1 || mode == 2){
+      f3d_lcd_fillScreen(WHITE);
+    }
+  } else if (prev ) {
+    mode = (mode-1)%2;
+  }
+
+
+  if (mode == 0){
+    gyro_display();
+  } else if (mode == 1){
+    tilt(); 
+  } else if (mode == 2) {
+    compass(); 
+  }
+  next = 0;
+  prev = 0; 
+
+  /* printf("jx = %d\n", nunchuk.jx); */
+  /* printf("jy = %d\n", nunchuk.jy); */
+  /* printf("ax = %d\n", nunchuk.ax); */
+  /* printf("ay = %d\n", nunchuk.ay); */
+  /* printf("az = %d\n", nunchuk.az); */
+  /* printf("c = %d\n", nunchuk.c); */
+  /* printf("z = %d\n", nunchuk.z); */
+
+
+  }
+
+}
+
+
+
+void gyro_display(void) {
+
+
+  //collects data and mutates data variable
+  f3d_gyro_getdata(data);
+
+  sprintf(data_string_x, "x = %4f", data[0]);
+  sprintf(data_string_y, "y = %4f", data[1]);
+  sprintf(data_string_z, "z = %4f", data[2]);
+
+  
+  f3d_lcd_drawString(30,10,data_string_x, RED, BLACK);   
+  f3d_lcd_drawString(30,20,data_string_y, GREEN, BLACK);   
+  f3d_lcd_drawString(30,30,data_string_z, BLUE, BLACK);   
+  
+
+  int x = data[0]; 
+  int y = data[1]; 
+  int z = data[2];  
+
+  for(inc = 69; inc < 98; inc++){
+    if(x>=0){
+      for(size = 64; size < x+64  && size <= 128 ; size++) {
+	f3d_lcd_drawPixel(size,inc,RED);
+      }
+    }else{
+      for(size = 64; size > x+64  && size >= 0; size--) {
+	f3d_lcd_drawPixel(size,inc,RED);
+      }
+    }
+  }
+
+  for(inc = 98; inc < 127; inc++){
+    if(y>=0){
+      for(size = 64; size < y+64  && size <= 128; size++) {
+	f3d_lcd_drawPixel(size,inc,GREEN);
+      }
+    }else{
+      for(size = 64; size > y+64  && size >= 0; size--) {
+	f3d_lcd_drawPixel(size,inc,GREEN);
+      }
+    }
+  }
+
+
+  for(inc = 127; inc < 160; inc++) {
+    if(z>=0){
+      for(size = 64; size < z+64   && size <= 128; size++) {
+	f3d_lcd_drawPixel(size,inc,BLUE);
+      }
+    }else{
+      for(size = 64; size > z+64 && size >= 0; size--) {
+	f3d_lcd_drawPixel(size,inc,BLUE);
+      }
+
+    }
+
+  }
+
+
+  f3d_lcd_setAddrWindow (0,40,ST7735_width-1,ST7735_height-1,MADCTLGRAPHICS);
+  for (row=0;row<ST7735_width;row++) {
+    for (col=0;col<ST7735_height; col++) {
+      f3d_lcd_pushColor(BLACK,1);
+    }
+  }
+}
+
+void compass(void){
+
+  
+    f3d_accel_read(accel_data); 
+    f3d_mag_read(mag_data);
+
+    float x_a = accel_data[0];
+    float y_a = accel_data[1];
+    float z_a = accel_data[2];
+
+
+    pitch = atanf(x_a/sqrt(pow(y_a,2) + pow(z_a,2)));
+    roll  = atanf(y_a/sqrt(pow(x_a,2) + pow(z_a,2)));
+
+
+    float x_m = mag_data[0];
+    float y_m = mag_data[1];
+    float z_m = mag_data[2];
+
+
+    float Xh = x_m * cos(pitch) + z_m * sin(pitch);
+    float Yh = x_m * sin(roll)*sin(pitch) + y_m * cos(roll) - z_m * sin(roll) * cos(pitch);
+
+    heading = atan2f(Yh,Xh);
+
+
+    degrees = heading * (180/M_PI) + 180;
+
+    led = (int) ((degrees + 22.5) / 45);
+    f3d_led_all_off();
+    f3d_led_on(led); 
+
+ }
+
+
+void tilt(void) {
+  
+    f3d_accel_read(accel_data); 
+    f3d_mag_read(mag_data);
+
+    float x_a = accel_data[0];
+    float y_a = accel_data[1];
+    float z_a = accel_data[2];
+
+
+    pitch = atanf(x_a/sqrt(pow(y_a,2) + pow(z_a,2)));
+    roll  = atanf(y_a/sqrt(pow(x_a,2) + pow(z_a,2)));
+
+
+    f3d_lcd_setAddrWindow(64, 80, 64+4, 80+4, MADCTLGRAPHICS);
+    f3d_lcd_pushColor(colors3, 25); 
+
+    x_0 = 64+(roll*35)   ;
+    y_0 = 80+(pitch*43)  ;    
+    x_1 = 64+(roll*35)   +4;
+    y_1 = 80+(roll*43)   +4;
+
+    f3d_lcd_setAddrWindow(x_0, y_0, x_1, y_1, MADCTLGRAPHICS);
+    f3d_lcd_pushColor(colors2, 25); 
+
+    delay(225); 
+
+    f3d_lcd_setAddrWindow(x_0, y_0, x_1, y_1, MADCTLGRAPHICS);
+    f3d_lcd_pushColor(colors, 25); 
+
+}
+
+
+
+
+
+
+#ifdef USE_FULL_ASSERT
+void assert_failed(uint8_t* file, uint32_t line) {
+  /* Infinite loop */
+  /* Use GDB to find out why we're here */
+  while (1);
+}
+#endif
+
+/* main.c ends here */
